@@ -11,6 +11,7 @@ on:
 jobs:
   ask-weather:
     runs-on: ubuntu-latest
+    environment: WEATHER
 
     steps:
       - name: Checkout
@@ -23,22 +24,11 @@ jobs:
         run: date
 
       - name: Get weather data and ask Gemini
+        env:
+          GEMINI_API: ${{ secrets.GEMINI_KEY }}
         run: |
-          export GEMINI_KEY="${{ secrets.GEMINI_KEY }}"
-
-          echo "⛅ Récupération de la météo..."
-          TEMP=$( curl -s https://wttr.in/Paris?format=3 )
-          
-          if [ -z "$TEMP" ]; then
-            echo "❌ Erreur : aucune donnée météo reçue."
-            exit 1
-          fi
-
-          echo "🌡️ Météo reçue : $TEMP"
-          echo "🔐 Longueur de la clé GEMINI : ${#GEMINI_KEY} caractères"
-
+          TEMP=$(curl -s https://wttr.in/Paris?format=3 )
           PROMPT="Résume la météo à Paris à partir de la réponse suivante : $TEMP"
-          echo "📝 Prompt envoyé à Gemini : $PROMPT"
 
           PAYLOAD=$(jq -n --arg text "$PROMPT" '{
             contents: [{
@@ -46,21 +36,14 @@ jobs:
             }]
           }')
 
-          echo "📦 Requête envoyée à l'API Gemini..."
           RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$GEMINI_KEY" \
             -H "Content-Type: application/json" \
             -X POST \
             -d "$PAYLOAD")
 
-          echo "🧾 Réponse brute : $RESPONSE"
-
+          
           SUMMARY=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text')
 
-          if [ "$SUMMARY" = "null" ] || [ -z "$SUMMARY" ]; then
-            echo "❌ Erreur : aucun résumé généré par Gemini."
-            exit 1
-          fi
-
-          echo "✅ Résumé de la météo : $SUMMARY"
+          echo "$SUMMARY"
 
           echo "$SUMMARY" > TEXT.txt
