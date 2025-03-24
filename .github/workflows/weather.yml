@@ -24,7 +24,7 @@ jobs:
 
       - name: Get weather data and ask Gemini
         env:
-          GEMINI_API: ${{ secrets.GEMINI_KEY }}
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
         run: |
           TEMP=$( curl -s https://wttr.in/Paris?format=3 )
           PROMPT="Résume la météo à Paris à partir de la réponse suivante : $TEMP"
