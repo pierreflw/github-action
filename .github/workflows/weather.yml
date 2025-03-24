@@ -26,7 +26,7 @@ jobs:
         env:
           GEMINI_API: ${{ secrets.GEMINI_KEY }}
         run: |
-          TEMP=$(curl -s https://wttr.in/Paris?format=3)
+          TEMP=$( curl -s https://wttr.in/Paris?format=3 )
           PROMPT="Résume la météo à Paris à partir de la réponse suivante : $TEMP"
 
           PAYLOAD=$(jq -n --arg text "$PROMPT" '{
