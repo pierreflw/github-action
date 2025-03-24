@@ -23,8 +23,6 @@ jobs:
         run: date
 
       - name: Get weather data and ask Gemini
-        env:
-          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
         run: |
           echo "⛅ Récupération de la météo..."
           TEMP=$( curl -s https://wttr.in/Paris?format=3 )
@@ -47,7 +45,7 @@ jobs:
           }')
 
           echo "📦 Requête envoyée à l'API Gemini..."
-          RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$GEMINI_KEY" \
+          RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDJIjxkVAsX1wQR_vglcHIXTsZ3YgvtC4Y" \
             -H "Content-Type: application/json" \
             -X POST \
             -d "$PAYLOAD")
