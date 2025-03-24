@@ -25,6 +25,10 @@ jobs:
       - name: Afficher l’heure d’exécution
         run: date
 
+      - name: Vérifier que la clé est présente (longueur uniquement)
+        run: |
+          echo "Longueur de la clé : ${#GEMINI_KEY}"
+
       - name: Get weather data and ask Gemini
         run: |
           TEMP=$(curl -s https://wttr.in/Paris?format=3 )
