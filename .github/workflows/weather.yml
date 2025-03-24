@@ -1,0 +1,26 @@
+name: Talk Weather
+
+on:
+  schedule:
+    - cron: "*/2 * * * *"
+
+jobs:
+  ask-weather:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      - name: Get the weather
+        run: |
+          curl wttr.in/Paris
+
+
+
+        
+      
+
+
+
