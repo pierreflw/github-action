@@ -6,7 +6,7 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: "*/2 * * * *" 
+    - cron: "*/2 * * * *"
 
 jobs:
   ask-weather:
@@ -18,6 +18,9 @@ jobs:
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Afficher l’heure d’exécution
+        run: date
 
       - name: Get weather data and ask Gemini
         env:
@@ -39,6 +42,7 @@ jobs:
 
           
           SUMMARY=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text')
+
           echo "$SUMMARY"
 
           echo "$SUMMARY" > TEXT.txt
