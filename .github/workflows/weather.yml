@@ -17,5 +17,5 @@ jobs:
 
       - name: Get the weather
         run: |
-          wttr=https://wttr.in/Paris
+          wttr=$(curl https://wttr.in/Paris)
           echo $wttr
