@@ -2,29 +2,40 @@ name: Talk Weather
 
 on:
   push:
-    branches: main
-  schedule:
-    - cron: "*/2 * * * *"
+    branches:
+      - main
   workflow_dispatch:
+  schedule:
+    - cron: "*/2 * * * *" 
 
 jobs:
   ask-weather:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get the weather
+      - name: Get weather data and ask Gemini
+        env:
+          GEMINI_API: ${{ secrets.GEMINI_KEY }}
         run: |
-          prompt="Résume la météo à Paris à partir de la réponse suivante: $wttr "
-          wttr=$(curl -s https://wttr.in/Paris?format=3)
-          echo "$wttr"
-          response=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${{secrets.GEMINI_KEY}}" \
-          -H 'Content-Type: application/json' \
-          -X POST \
-          -d '{
-            "contents": [{
-              "parts":[{"text": "'"$prompt"'"}]
-              }]
-            }')
-          echo "$response"
+          TEMP=$(curl -s https://wttr.in/Paris?format=3)
+          PROMPT="Résume la météo à Paris à partir de la réponse suivante : $TEMP"
+
+          PAYLOAD=$(jq -n --arg text "$PROMPT" '{
+            contents: [{
+              parts: [{ text: $text }]
+            }]
+          }')
+
+          RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$GEMINI_KEY" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "$PAYLOAD")
+
+          
+          SUMMARY=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text')
+          echo "$SUMMARY"
+
+          echo "$SUMMARY" > TEXT.txt
