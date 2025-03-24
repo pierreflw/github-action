@@ -44,7 +44,7 @@ jobs:
 
           echo "📤 Envoi du prompt à Gemini..."
 
-          RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$GEMINI_KEY" \
+          RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$GEMINI_KEY" \
             -H "Content-Type: application/json" \
             -X POST \
             -d "$PAYLOAD")
