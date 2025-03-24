@@ -23,9 +23,9 @@ jobs:
         run: date
 
       - name: Get weather data and ask Gemini
-        env:
-          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
         run: |
+          export GEMINI_KEY="${{ secrets.GEMINI_KEY }}"
+
           echo "⛅ Récupération de la météo..."
           TEMP=$( curl -s https://wttr.in/Paris?format=3 )
           
