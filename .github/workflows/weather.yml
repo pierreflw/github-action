@@ -6,14 +6,14 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: "*/2 * * * *"  # Toutes les 2 minutes (pour test uniquement, attention aux quotas !)
+    - cron: "*/2 * * * *"
 
 jobs:
   ask-weather:
     runs-on: ubuntu-latest
-    environment: WEATHER   # Nécessaire pour accéder aux secrets d'environnement
+    environment: WEATHER   
     env:
-      GEMINI_KEY: ${{ secrets.GEMINI_KEY }}  # Injection du secret dans l’environnement shell
+      GEMINI_KEY: ${{ secrets.GEMINI_KEY }} 
 
     steps:
       - name: Checkout
